@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        viewModel.onCreated()
     }
 
     private fun handleUiEvent(event: UsersScreenEvent, binding: ActivityMainBinding) {

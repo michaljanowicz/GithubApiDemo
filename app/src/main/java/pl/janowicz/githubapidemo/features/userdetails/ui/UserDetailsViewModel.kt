@@ -18,7 +18,7 @@ const val KEY_USER_LOGIN = "user_login"
 
 @HiltViewModel
 class UserDetailsViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val userDetailsRepository: UserDetailsRepository,
     private val throwableToCallErrorConverter: ThrowableToCallErrorConverter
 ) : ViewModel() {
@@ -29,10 +29,12 @@ class UserDetailsViewModel @Inject constructor(
     private val _events = MutableSharedFlow<UserDetailsScreenEvent>()
     val events = _events.asSharedFlow()
 
-    private val userLogin: String = savedStateHandle.requireValue(KEY_USER_LOGIN)
+    private val userLogin: String get() = savedStateHandle.requireValue(KEY_USER_LOGIN)
 
-    init {
-        getUserDetails()
+    fun onCreated() {
+        if (uiState.value !is UserDetailsScreenState.Success) {
+            getUserDetails()
+        }
     }
 
     private fun getUserDetails() {

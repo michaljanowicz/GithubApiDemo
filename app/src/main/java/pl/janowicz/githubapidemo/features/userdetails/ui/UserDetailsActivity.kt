@@ -46,6 +46,7 @@ class UserDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+        viewModel.onCreated()
     }
 
     private fun handleUiEvent(event: UserDetailsScreenEvent, binding: ActivityUserDetailsBinding) {

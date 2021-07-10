@@ -25,8 +25,10 @@ class MainViewModel @Inject constructor(
     private val _events = MutableSharedFlow<UsersScreenEvent>()
     val events = _events.asSharedFlow()
 
-    init {
-        getUsers()
+    fun onCreated() {
+        if (uiState.value !is UsersScreenState.Success) {
+            getUsers()
+        }
     }
 
     fun onUserClicked(user: User) {
