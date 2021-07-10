@@ -3,8 +3,10 @@ package pl.janowicz.githubapidemo.features.userlist.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import pl.janowicz.githubapidemo.features.userlist.repository.User
 import pl.janowicz.githubapidemo.features.userlist.repository.UsersRepository
@@ -20,12 +22,17 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UsersScreenState>(UsersScreenState.Loading)
     val uiState: StateFlow<UsersScreenState> = _uiState
 
+    private val _events = MutableSharedFlow<UsersScreenEvent>()
+    val events = _events.asSharedFlow()
+
     init {
         getUsers()
     }
 
     fun onUserClicked(user: User) {
-        //TODO
+        viewModelScope.launch {
+            _events.emit(UsersScreenEvent.OpenUserDetails(userLogin = user.login))
+        }
     }
 
     fun onSwipedRefresh() {
@@ -38,7 +45,8 @@ class MainViewModel @Inject constructor(
             _uiState.value = try {
                 UsersScreenState.Success(usersRepository.getUsers())
             } catch (t: Throwable) {
-                UsersScreenState.Error(throwableToCallErrorConverter.convert(t))
+                _events.emit(UsersScreenEvent.ShowError(throwableToCallErrorConverter.convert(t)))
+                UsersScreenState.Error
             }
         }
     }

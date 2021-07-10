@@ -6,6 +6,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ApiUserDetails(
     @Json(name = "id") val id: Long,
-    @Json(name = "login") val login: String,
-    @Json(name = "avatar_url") val avatarUrl: String
+    @Json(name = "name") val name: String?,
+    @Json(name = "avatar_url") val avatarUrl: String,
+    @Json(name = "location") val location: String?,
+    @Json(name = "blog") val blog: String?
 )

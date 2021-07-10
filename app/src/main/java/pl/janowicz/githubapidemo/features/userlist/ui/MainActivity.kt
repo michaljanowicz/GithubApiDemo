@@ -11,6 +11,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import pl.janowicz.githubapidemo.databinding.ActivityMainBinding
+import pl.janowicz.githubapidemo.features.userdetails.ui.UserDetailsActivity
+import pl.janowicz.githubapidemo.utils.error.ErrorSnackbar
 
 private const val NUMBER_OF_COLUMNS = 2
 
@@ -35,22 +37,38 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    binding.swipeRefreshLayout.isRefreshing = uiState is UsersScreenState.Loading
-
-                    when (uiState) {
-                        is UsersScreenState.Loading -> {
-                            //binding.swipeRefreshLayout.isRefreshing = true
-                        }
-                        is UsersScreenState.Success -> {
-                            userAdapter.submitList(uiState.users)
-                        }
-                        is UsersScreenState.Error -> {
-
-                        }
+                launch {
+                    viewModel.events.collect { event ->
+                        handleUiEvent(event, binding)
+                    }
+                }
+                launch {
+                    viewModel.uiState.collect { uiState ->
+                        handleUiState(uiState, binding, userAdapter)
                     }
                 }
             }
+        }
+    }
+
+    private fun handleUiEvent(event: UsersScreenEvent, binding: ActivityMainBinding) {
+        when (event) {
+            is UsersScreenEvent.ShowError -> ErrorSnackbar.showCallError(binding.root, event.error)
+            is UsersScreenEvent.OpenUserDetails -> UserDetailsActivity.startActivity(
+                this@MainActivity,
+                event.userLogin
+            )
+        }
+    }
+
+    private fun handleUiState(
+        state: UsersScreenState,
+        binding: ActivityMainBinding,
+        userAdapter: UsersAdapter
+    ) {
+        binding.swipeRefreshLayout.isRefreshing = state is UsersScreenState.Loading
+        if (state is UsersScreenState.Success) {
+            userAdapter.submitList(state.users)
         }
     }
 }

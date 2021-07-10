@@ -1,5 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pl">
     <string name="app_name">GithubApiDemo</string>
     <string name="network_error_message">Błąd połączenia z internetem</string>
-    <string name="server_error_message">Błąd połączenia z serwerem</string>
+    <string name="unknown_error_message">Nieznany błąd, spróbuj ponownie</string>
 </resources>

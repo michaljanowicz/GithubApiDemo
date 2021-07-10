@@ -7,19 +7,22 @@ import pl.janowicz.githubapidemo.R
 
 object ErrorSnackbar {
 
-    fun showNetworkError(parent: View): Snackbar =
-        showSnackbar(parent, R.string.network_error_message)
+    fun showCallError(parent: View, callError: CallError) {
+        when (callError) {
+            is CallError.ApiError -> showError(parent, callError.message)
+            is CallError.NetworkError -> showSnackbar(parent, R.string.network_error_message)
+            is CallError.UnknownError -> showSnackbar(parent, R.string.unknown_error_message)
+        }
+    }
 
-    fun showServerError(parent: View): Snackbar =
-        showSnackbar(parent, R.string.server_error_message)
 
-    fun showError(parent: View, message: String): Snackbar =
-        Snackbar.make(parent, message, Snackbar.LENGTH_INDEFINITE).also {
+    private fun showError(parent: View, message: String): Snackbar =
+        Snackbar.make(parent, message, Snackbar.LENGTH_LONG).also {
             it.show()
         }
 
     private fun showSnackbar(parent: View, @StringRes resId: Int): Snackbar =
-        Snackbar.make(parent, resId, Snackbar.LENGTH_INDEFINITE).also {
+        Snackbar.make(parent, resId, Snackbar.LENGTH_LONG).also {
             it.show()
         }
 }

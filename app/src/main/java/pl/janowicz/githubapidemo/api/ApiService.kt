@@ -10,6 +10,6 @@ interface ApiService {
     @GET("users")
     suspend fun getUsers(): List<ApiUser>
 
-    @GET("users/{id}")
-    suspend fun getUserDetails(@Path("id") id: Long): ApiUserDetails
+    @GET("users/{login}")
+    suspend fun getUserDetails(@Path("login") login: String): ApiUserDetails
 }

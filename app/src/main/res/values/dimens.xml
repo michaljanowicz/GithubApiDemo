@@ -2,4 +2,6 @@
 <resources>
     <dimen name="standard_padding">16dp</dimen>
     <dimen name="standard_corner_radius">16dp</dimen>
+
+    <dimen name="user_details_avatar_size">200dp</dimen>
 </resources>
