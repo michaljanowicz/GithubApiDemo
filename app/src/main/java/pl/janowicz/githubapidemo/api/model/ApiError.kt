@@ -1,4 +1,4 @@
-package pl.janowicz.githubapidemo.api.networkresponse
+package pl.janowicz.githubapidemo.api.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
